@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/doromi22/MIMO#readme",
   "dependencies": {
+    "ejs": "^3.1.10",
     "express": "^4.19.2"
   }
 }
