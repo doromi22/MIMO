@@ -4,6 +4,7 @@
             <li><a href="/submit">投稿する</a></li>
             <li><a href="/history">投稿履歴</a></li>
             <% if (loggedIn) { %>
+                <li><a href="/search">作品検索</a></li>
                 <li><a href="/logout">ログアウト</a></li>
                 <li>こんにちは、 <%= username %> 様！</li>
             <% } else { %>
