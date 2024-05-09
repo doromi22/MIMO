@@ -4,7 +4,8 @@
   "description": "manga upload site",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon your_app.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,10 @@
   "homepage": "https://github.com/doromi22/MIMO#readme",
   "dependencies": {
     "ejs": "^3.1.10",
+    "ejs-lint": "^0.1.1",
     "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }
