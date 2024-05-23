@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 const ejs = require('ejs');
 
 app.set('view engine', 'ejs');
 
 // middleware
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
+
+app.set('view engine', 'ejs');
 
 // routing
 app.get('/', (req, res) => {
@@ -15,7 +19,7 @@ app.get('/', (req, res) => {
 });
 
 // server start
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

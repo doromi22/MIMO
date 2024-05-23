@@ -1,3 +1,171 @@
-h1 {
-    font-size: xx-small;
+/* Basic reset for box-sizing */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Layout for header and navbar */
+.header-navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.header {
+    flex: 1;
+}
+
+.header h1 {
+    margin: 0;
+    padding: 10px;
+}
+
+.header a {
+    text-decoration: none;
+    color: black;
+}
+
+.navbar {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+}
+
+.toggle-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 21px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: auto;
+    margin-right: 10px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1001;
+    transition: transform 0.3s ease; /* Transition for smooth sliding */
+}
+
+.toggle-button .bar {
+    width: 30px;
+    height: 3px;
+    background-color: #b0b0b0;
+    border-radius: 10px;
+    transition: all 0.3s linear;
+    position: relative;
+    transform-origin: 1px;
+}
+
+.toggle-button:focus {
+    outline: none;
+}
+
+.toggle-button.hidden {
+    display: none;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -250px; /* Start off-screen */
+    width: 250px;
+    height: 100%;
+    background-color: #343537;
+    overflow: hidden;
+    transition: right 0.3s ease;
+    padding-top: 10%; /* To position below the header */
+    z-index: 1000; /* Make sure sidebar is below the button */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 90%;
+}
+
+.sidebar ul li {
+    padding: 8px 16px;
+    text-align: center;
+    border-bottom: 1px solid #555;
+}
+
+.sidebar ul li:last-child {
+    border-bottom: none;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+
+.sidebar.active {
+    right: 0; /* Slide in from the right */
+}
+
+.sidebar .toggle-button {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    margin-bottom: 50px;
+    z-index: 1001;
+}
+
+/* Additional styling for the header content */
+.header {
+    background-color: #f8f8f8;
+    padding: 10px;
+}
+
+.header-content {
+    display: flex;
+    align-items: flex-end; /* Aligns the bottom of the text elements */
+}
+
+.header-title {
+    margin-right: 9px; /* Adjust spacing between the title and subtitle */
+}
+
+.header-title h1 {
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+}
+
+.header-subtitle p {
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    line-height: 2.9; /* Adjust this to align the text as needed */
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 999; /* Make sure overlay is above everything else */
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
 }
