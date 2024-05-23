@@ -15,11 +15,13 @@
 
 .header {
     flex: 1;
+    color: #ECEFF5;
 }
 
 .header h1 {
     margin: 0;
     padding: 10px;
+    color: #ECEFF5;
 }
 
 .header a {
@@ -74,8 +76,8 @@
 .sidebar {
     position: fixed;
     top: 0;
-    right: -250px; /* Start off-screen */
-    width: 250px;
+    right: -350px; /* Start off-screen */
+    width: 350px;
     height: 100%;
     background-color: #343537;
     overflow: hidden;
@@ -125,7 +127,6 @@
 
 /* Additional styling for the header content */
 .header {
-    background-color: #f8f8f8;
     padding: 10px;
 }
 
