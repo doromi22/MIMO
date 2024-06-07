@@ -5,6 +5,13 @@
     padding: 0;
 }
 
+.newcomics {
+    color: #ECEFF5;
+    text-align: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
 /* Layout for header and navbar */
 .header-navbar-container {
     display: flex;
@@ -98,7 +105,7 @@
 }
 
 .sidebar ul li {
-    padding: 8px 16px;
+    padding: 18px 16px;
     text-align: center;
     border-bottom: 1px solid #555;
 }
