@@ -1,4 +1,4 @@
-<!-- views/index.ejs -->
+<!-- views/login.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,19 +8,30 @@
 
     <link rel="stylesheet" href="/styles/style.css">
 </head>
-<body bgcolor="#41444B">
+<body>
     
     <!-- Header and Navbar Container -->
     <div class="header-navbar-container">
         <!-- header -->
-        <%- include ("header.ejs") %>
+        <%- include ("../header.ejs") %>
 
         <!-- navbar -->
-        <%- include ("navbar.ejs") %>
+        <%- include ("../navbar.ejs") %>
     </div>
 
-    <div class="newcomics">
-        <p>新着作品</p>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
     </div>
 
     <div class="overlay" id="overlay"></div>

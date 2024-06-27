@@ -1,4 +1,4 @@
-<!-- views/index.ejs -->
+<!-- views/register.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,22 +8,48 @@
 
     <link rel="stylesheet" href="/styles/style.css">
 </head>
-<body bgcolor="#41444B">
+<body>
     
     <!-- Header and Navbar Container -->
     <div class="header-navbar-container">
         <!-- header -->
-        <%- include ("header.ejs") %>
+        <%- include ("../header.ejs") %>
 
         <!-- navbar -->
-        <%- include ("navbar.ejs") %>
+        <%- include ("../navbar.ejs") %>
     </div>
 
-    <div class="newcomics">
-        <p>新着作品</p>
+    <div class="register-container">
+        <h2>Register</h2>
+        <form action="/register" method="POST" onsubmit="return validatePassword()">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+            <button type="submit">Register</button>
+        </form>
     </div>
 
     <div class="overlay" id="overlay"></div>
     <script src="/scripts/scripts.js"></script>
+    <script>
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>

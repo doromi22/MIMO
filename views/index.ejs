@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="/styles/style.css">
 </head>
-<body background-color="#41444B">
+<body>
     
     <!-- Header and Navbar Container -->
     <div class="header-navbar-container">
@@ -21,6 +21,14 @@
 
     <div class="newcomics">
         <p>新着作品</p>
+        <div class="comics-container">
+            <% comics.forEach(comic => { %>
+                <div class="comic-item" onclick="location.href='/viewer/<%= comic.id %>'">
+                    <div class="comic-thumbnail" style="background-image: url('/uploads/<%= comic.thumbnail %>');"></div>
+                    <div class="comic-title"><%= comic.title.length > 12 ? comic.title.substring(0, 12) + '...' : comic.title %></div>
+                </div>
+            <% }); %>
+        </div>
     </div>
 
     <div class="overlay" id="overlay"></div>

@@ -1,0 +1,2 @@
+#prevent uploading env file to github
+.env
