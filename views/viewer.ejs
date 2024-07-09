@@ -1,152 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= comic.title %> - Viewer</title>
+    <title>
+        <%= comic.title %> - Viewer
+    </title>
     <link rel="stylesheet" href="/styles/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
-    <style>
-        .viewer-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .page-container {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: center;
-            width: 100%;
-            max-width: 1200px;
-            margin: 20px 0;
-            position: relative;
-        }
-        .page {
-            width: 50%;
-            height: auto;
-            background-color: #fff;
-            object-fit: contain;
-            position: relative;
-        }
-        .blank-page {
-            background-color: transparent;
-        }
-        .toggle-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-        @media (max-width: 768px) {
-            .page {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-<body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+    </script>
 
+    <meta name="pdf-url" content="<%= comic.pdf %>">
+</head>
+
+<body>
+    <!-- Header and Navbar Container -->
+    <div class="header-navbar-container">
+        <!-- header -->
+        <%- include ("header.ejs") %>
+
+            <!-- navbar -->
+            <%- include ("navbar.ejs") %>
+    </div>
     <div class="viewer-container">
-        <h1><%= comic.title %></h1>
+        <h1 style="color: white;">
+            <%= comic.title %>
+        </h1>
         <div class="page-container">
             <canvas id="page1" class="page"></canvas>
             <canvas id="page2" class="page"></canvas>
-            <button id="togglePage1" class="toggle-button">Toggle Page 1</button>
         </div>
-        <button id="prevButton">Previous</button>
-        <button id="nextButton">Next</button>
+        <div class="toggle-button" id="zurasubutton">
+            <span style="color: rgb(184, 184, 184);">ページをずらす</span>
+            <div id="toggleSwitch" class="toggle-switch"></div>
+        </div>
+        <button id="nextButton" class="nav-button next-button">
+            <svg viewBox="0 0 24 24">
+                <path d="M15 18l-6-6 6-6" stroke="gray" stroke-width="2" fill="none" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </button>
+        <button id="prevButton" class="nav-button prev-button">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 18l6-6-6-6" stroke="gray" stroke-width="2" fill="none" stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+        </button>
+        <button id="fullscreenToggle" class="fullscreen-toggle">
+            <span>フルスクリーン</span>
+            <div class="toggle-switch"></div>
+        </button>
     </div>
 
-    <script>
-        const url = '<%= comic.pdf %>';
-        let pdfDoc = null,
-            currentPage = 1,
-            totalPageCount = 0,
-            addBlankPage = <%= pageStatus %>;
+    <% if (username) { %>
+        <!-- 채팅 버튼 -->
+        <button id="chat-toggle-button" class="chat-toggle-button">
+            コメント
+        </button>
+        <% } %>
 
-        const page1 = document.getElementById('page1');
-        const page2 = document.getElementById('page2');
-        const togglePage1 = document.getElementById('togglePage1');
-        const prevButton = document.getElementById('prevButton');
-        const nextButton = document.getElementById('nextButton');
+            <% if (username) { %>
+                <!-- Chat UI 포함 -->
+                <div id="chatContainer" class="chat-container" data-comic-id="<%= comic.id %>"
+                    data-username="<%= username %>">
+                    <div class="chat-header">
+                        コメント
+                        <button id="chat-close-button" class="close-button">&times;</button>
+                    </div>
+                    <div id="chatMessages" class="chat-messages">
+                        <% chatMessages.forEach(chat=> { %>
+                            <div class="chat-message">
+                                <span class="chat-username" style="color: <%= chat.color %>">
+                                    <%= chat.username %>
+                                </span>: <%= chat.message %>
+                                    <span class="chat-timestamp">
+                                        <%= new Date(chat.timestamp).toLocaleString() %>
+                                    </span>
+                            </div>
+                            <% }); %>
+                    </div>
+                    <form id="chatForm" class="chat-form">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="コメントを入力..." required />
+                        <button type="submit" class="chat-send">送信</button>
+                    </form>
+                </div>
+                <!-- Dark overlay -->
+                <div id="chat-overlay" class="chat-overlay"></div>
+                <% } %>
 
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
-
-        pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
-            pdfDoc = pdfDoc_;
-            totalPageCount = pdfDoc.numPages;
-            renderPages();
-        });
-
-        function renderPages() {
-            renderPage(currentPage, page1);
-            if (currentPage + 1 <= totalPageCount) {
-                renderPage(currentPage + 1, page2);
-            } else {
-                clearCanvas(page2);
-            }
-        }
-
-        function renderPage(pageNumber, canvas) {
-            pdfDoc.getPage(pageNumber).then(page => {
-                const viewport = page.getViewport({ scale: 1.0 });
-                const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                const renderContext = {
-                    canvasContext: context,
-                    viewport: viewport
-                };
-                page.render(renderContext);
-            });
-        }
-
-        function renderBlankPage(canvas) {
-            const context = canvas.getContext('2d');
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            canvas.width = 800; // Width of the blank page
-            canvas.height = 1200; // Height of the blank page
-            context.fillStyle = "#ffffff"; // Background color of the blank page
-            context.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function clearCanvas(canvas) {
-            const context = canvas.getContext('2d');
-            context.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        togglePage1.addEventListener('click', () => {
-            const action = addBlankPage ? 'remove' : 'add';
-            fetch('/add-blank-page', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ comicId: <%= comic.id %>, action })
-            })
-            .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        });
-
-        prevButton.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage -= 2;
-                renderPages();
-            }
-        });
-
-        nextButton.addEventListener('click', () => {
-            if (currentPage + 2 <= totalPageCount) {
-                currentPage += 2;
-                renderPages();
-            }
-        });
-    </script>
+                    <div class="overlay" id="overlay"></div>
+                    <script src="/scripts/scripts.js"></script>
 </body>
+
 </html>

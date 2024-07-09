@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MIMO</title>
-
+    <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
@@ -20,85 +20,36 @@
 
     <div class="newcomics">
         <p>アップロードした作品</p>
-        <div class="comics-container">
+        <div class="controls">
             <form id="deleteForm" action="/delete-comic" method="POST">
                 <input type="hidden" name="comicIds" id="comicIds" value="">
-                <button type="button" id="selectAll">Select All</button>
-                <button type="submit">Delete Selected</button>
-                <% comics.forEach(comic => { %>
-                    <div class="comic-item">
-                        <input type="checkbox" class="comic-checkbox" value="<%= comic.id %>">
-                        <div class="comic-thumbnail"
-                            style="background-image: url('/uploads/<%= comic.thumbnail %>');"></div>
-                        <div class="comic-title">
-                            <%= comic.title.length> 12 ? comic.title.substring(0, 12) + '...' : comic.title %>
-                        </div>
-                        <button type="button" class="delete-button" data-id="<%= comic.id %>">Delete</button>
-                    </div>
-                <% }); %>
+                <button type="button" id="selectAll" class="custom-button">すべて選択</button>
+                <button type="submit" id="deleteSelected" class="custom-button">選択した項目を削除</button>
             </form>
+        </div>
+        <div class="comics-container">
+            <% comics.forEach(comic => { %>
+                <div class="comic-item">
+                    <input type="checkbox" class="comic-checkbox" value="<%= comic.id %>">
+                    <div class="comic-thumbnail"
+                        style="background-image: url('/uploads/<%= comic.thumbnail %>');"
+                        onclick="location.href='/viewer/<%= comic.id %>'"></div>
+                    <div class="comic-title">
+                        <%= comic.title.length> 12 ? comic.title.substring(0, 12) + '...' : comic.title %>
+                    </div>
+                    <button type="button" class="delete-button" data-id="<%= comic.id %>">削除</button>
+                    <select class="role-select" data-id="<%= comic.id %>">
+                        <option value="1" <%= comic.role === 1 ? 'selected' : '' %>>全員に公開</option>
+                        <option value="2" <%= comic.role === 2 ? 'selected' : '' %>>学生限定公開</option>
+                        <option value="3" <%= comic.role === 3 ? 'selected' : '' %>>先生限定公開</option>
+                        <option value="4" <%= comic.role === 4 ? 'selected' : '' %>>非公開</option>
+                    </select>
+                </div>
+            <% }); %>
         </div>
     </div>
 
     <div class="overlay" id="overlay"></div>
     <script src="/scripts/scripts.js"></script>
-    <script>
-        const selectAllButton = document.getElementById('selectAll');
-        const deleteForm = document.getElementById('deleteForm');
-        const comicCheckboxes = document.querySelectorAll('.comic-checkbox');
-        const deleteButtons = document.querySelectorAll('.delete-button');
-
-        selectAllButton.addEventListener('click', () => {
-            comicCheckboxes.forEach(checkbox => {
-                checkbox.checked = true;
-            });
-        });
-
-        deleteForm.addEventListener('submit', (event) => {
-            const selectedComicIds = [];
-            comicCheckboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    selectedComicIds.push(checkbox.value);
-                }
-            });
-            if (selectedComicIds.length === 0) {
-                event.preventDefault();
-                alert('Please select at least one comic to delete.');
-            } else {
-                document.getElementById('comicIds').value = JSON.stringify(selectedComicIds);
-            }
-        });
-
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', (event) => {
-                const comicId = button.getAttribute('data-id');
-                const confirmed = confirm('Are you sure you want to delete this comic?');
-                if (confirmed) {
-                    fetch('/delete-comic', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ comicIds: [comicId] })
-                    })
-                    .then(response => {
-                        if (response.redirected) {
-                            window.location.href = response.url;
-                        } else {
-                            return response.json();
-                        }
-                    })
-                    .then(data => {
-                        if (data && data.message !== 'success') {
-                            alert('Failed to delete the comic.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                }
-            });
-        });
-    </script>
 </body>
 </html>

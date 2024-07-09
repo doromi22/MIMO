@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MIMO - 作品検索</title>
-
     <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
@@ -18,15 +17,14 @@
         <%- include ("navbar.ejs") %>
     </div>
 
-    <div class="search-container">
-        <form action="/search" method="GET">
-            <input type="text" name="query" placeholder="タイトルやタグで検索">
-            <button type="submit">検索</button>
-        </form>
-    </div>
-
     <div class="newcomics">
         <p>作品検索</p>
+        <div class="search-container">
+            <form action="/search" method="GET">
+                <input type="text" name="query" placeholder="タイトルやタグで検索">
+                <button type="submit" class="custom-button">検索</button>
+            </form>
+        </div>
         <div class="comics-container">
             <% comics.forEach(comic => { %>
                 <div class="comic-item" onclick="location.href='/viewer/<%= comic.id %>'">

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { PDFDocument } = require('pdf-lib');
+const path = require('path');
 
 async function addBlankPageToPdf(inputPath, outputPath) {
     const existingPdfBytes = fs.readFileSync(inputPath);
@@ -17,8 +18,9 @@ async function addBlankPageToPdf(inputPath, outputPath) {
 async function removeBlankPageFromPdf(inputPath, outputPath) {
     const existingPdfBytes = fs.readFileSync(inputPath);
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
+    const pages = pdfDoc.getPages();
 
-    if (pdfDoc.getPageCount() > 1) {
+    if (pages.length > 1) {
         pdfDoc.removePage(0);
     }
 

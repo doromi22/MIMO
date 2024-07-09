@@ -1,0 +1,58 @@
+<!-- views/register.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIMO</title>
+
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+    
+    <!-- Header and Navbar Container -->
+    <div class="header-navbar-container">
+        <!-- header -->
+        <%- include ("../header.ejs") %>
+
+        <!-- navbar -->
+        <%- include ("../navbar.ejs") %>
+    </div>
+
+    <div class="register-container">
+        <h2>新規登録（先生）</h2>
+        <% if (typeof errorMessage !== 'undefined') { %>
+            <div class="error-message"><%= errorMessage %></div>
+        <% } %>
+        <form action="/teacherregister" method="POST" onsubmit="return validatePassword()">
+            <div class="form-group">
+                <label for="username">ユーザー名:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">パスワード:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">パスワード（確認）:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+            <button type="submit" class="custom-button">登録</button>
+        </form>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <script src="/scripts/scripts.js"></script>
+    <script>
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            if (password !== confirmPassword) {
+                alert('パスワードが一致しません。');
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+</html>

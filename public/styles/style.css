@@ -5,6 +5,12 @@
     padding: 0;
 }
 
+/* Prevent double tap zoom */
+html, body {
+    touch-action: manipulation;
+    overscroll-behavior: none;
+}
+
 body {
     background-color: #343537;
 }
@@ -48,25 +54,26 @@ body {
     position: relative;
 }
 
-.toggle-button {
+.navtoggle-button {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 30px;
+    width: 21px;
     height: 21px;
     background: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
     margin-left: auto;
-    margin-right: 10px;
+    margin-right: 20px;
     box-sizing: border-box;
     position: relative;
     z-index: 1001;
-    transition: transform 0.3s ease; /* Transition for smooth sliding */
+    transition: transform 0.3s ease;
+    /* Transition for smooth sliding */
 }
 
-.toggle-button .bar {
+.navtoggle-button .bar {
     width: 30px;
     height: 3px;
     background-color: #b0b0b0;
@@ -76,25 +83,28 @@ body {
     transform-origin: 1px;
 }
 
-.toggle-button:focus {
+.navtoggle-button:focus {
     outline: none;
 }
 
-.toggle-button.hidden {
+.navtoggle-button.hidden {
     display: none;
 }
 
 .sidebar {
     position: fixed;
     top: 0;
-    right: -350px; /* Start off-screen */
+    right: -350px;
+    /* Start off-screen */
     width: 350px;
     height: 100%;
     background-color: #343537;
     overflow: hidden;
     transition: right 0.3s ease;
-    padding-top: 10%; /* To position below the header */
-    z-index: 1000; /* Make sure sidebar is below the button */
+    padding-top: 10%;
+    /* To position below the header */
+    z-index: 1000;
+    /* Make sure sidebar is below the button */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -125,10 +135,11 @@ body {
 }
 
 .sidebar.active {
-    right: 0; /* Slide in from the right */
+    right: 0;
+    /* Slide in from the right */
 }
 
-.sidebar .toggle-button {
+.sidebar .navtoggle-button {
     position: absolute;
     top: 30px;
     left: 20px;
@@ -143,11 +154,13 @@ body {
 
 .header-content {
     display: flex;
-    align-items: flex-end; /* Aligns the bottom of the text elements */
+    align-items: flex-end;
+    /* Aligns the bottom of the text elements */
 }
 
 .header-title {
-    margin-right: 9px; /* Adjust spacing between the title and subtitle */
+    margin-right: 9px;
+    /* Adjust spacing between the title and subtitle */
 }
 
 .header-title h1 {
@@ -160,7 +173,8 @@ body {
     font-size: 12px;
     margin: 0;
     padding: 0;
-    line-height: 2.9; /* Adjust this to align the text as needed */
+    line-height: 2.9;
+    /* Adjust this to align the text as needed */
 }
 
 /* Overlay */
@@ -170,11 +184,13 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    background: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease;
-    z-index: 999; /* Make sure overlay is above everything else */
+    z-index: 999;
+    /* Make sure overlay is above everything else */
 }
 
 .overlay.active {
@@ -186,21 +202,29 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
-    padding: 20px;
+    padding: 40px;
 }
+
 .comic-item {
     position: relative;
-    border: 1px solid #ddd;
+    border: 2px solid #744196;
+    background-color: #2c2b2c;
+    color: #fbf6ff;
     border-radius: 8px;
 }
+
 .comic-thumbnail {
     width: 100%;
     height: 0;
-    padding-bottom: 133.33%; /* 3:4 ratio */
+    padding-bottom: 133.33%;
+    /* 3:4 ratio */
     background-size: cover;
     background-position: center;
     position: relative;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
 }
+
 .comic-title {
     padding: 10px;
     font-size: 1em;
@@ -208,6 +232,7 @@ body {
     white-space: nowrap;
     overflow: hidden;
 }
+
 @media (max-width: 768px) {
     .comic-title {
         font-size: 0.9em;
@@ -215,4 +240,555 @@ body {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+    #page2 {
+        display: none;
+    }
+    #page1 {
+        width: 80%;
+    }
+    #fullscreenToggle, #zurasubutton {
+        display: none;
+    }
+    .header-subtitle {
+        display: none;
+    }
+}
+
+body {
+    background-color: #343537;
+}
+
+/* PDF Viewer Styles */
+.viewer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #343537;
+}
+
+.page-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px 0;
+    position: relative;
+}
+
+.page {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    background-color: #fff;
+    object-fit: contain;
+    position: relative;
+    border: 1px solid #ddd;
+}
+
+.toggle-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-switch {
+    width: 50px;
+    height: 25px;
+    display: block;
+    background-color: #ccc;
+    border-radius: 25px;
+    position: relative;
+    box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-left: 10px;
+}
+
+.toggle-switch::after {
+    content: '';
+    width: 23px;
+    height: 23px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    transition: left 0.2s;
+}
+
+.toggle-switch.on {
+    background-color: #744196;
+}
+
+.toggle-switch.on::after {
+    left: 26px;
+}
+
+.nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+    user-select: none;
+    color: gray;
+}
+
+.nav-button svg {
+    width: 50px;
+    height: 50px;
+}
+
+.prev-button {
+    right: 20px;
+}
+
+.next-button {
+    left: 20px;
+}
+
+/* 기존 스타일 */
+
+.chat-container {
+    position: fixed;
+    left: -360px;
+    /* Start off-screen */
+    bottom: 0;
+    width: 360px;
+    height: 100%;
+    /* Adjusted height */
+    background-color: #343537;
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    z-index: 1001;
+    /* Make sure it's above the overlay */
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-container.active {
+    left: 0;
+    /* Slide in */
+}
+
+.chat-header {
+    padding: 10px;
+    background-color: #444;
+    color: white;
+    text-align: center;
+    position: relative;
+    /* For positioning close button */
+}
+
+.chat-header .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    color: white;
+}
+
+.chat-form {
+    display: flex;
+    padding: 10px;
+    background-color: #444;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+}
+
+.chat-send {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #744196;
+    color: white;
+    cursor: pointer;
+}
+
+.chat-toggle-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: #744196;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.chat-message {
+    margin-bottom: 5px;
+}
+
+.chat-username {
+    font-weight: bold;
+}
+
+.chat-timestamp {
+    font-size: 0.8em;
+    color: gray;
+    margin-left: 5px;
+}
+
+/* Dark overlay */
+.chat-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+    /* Ensure it's below the chat container */
+}
+
+.chat-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loading-placeholder {
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+    color: #858585;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-button {
+    background-color: #744196;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.custom-button:hover {
+    background-color: #5b306d;
+}
+
+.search-container input[type="text"] {
+    width: 30%;
+    padding: 10px;
+    border: 2px solid #744196;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.search-container button {
+    background-color: #744196;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #5b306d;
+}
+
+.search-container {
+    margin-top: 20px;
+}
+
+.no-results-message {
+    margin-top: 200px;
+    text-align: center;
+    color: #afadb1;
+    font-size: medium;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    padding: 20px;
+}
+
+.login-container h2 {
+    color: #f7f2fa;
+    margin-bottom: 20px;
+}
+
+.login-container .form-group {
+    margin-bottom: 15px;
+}
+
+.login-container label {
+    display: block;
+    margin-bottom: 5px;
+    color: #e4e4e4;
+}
+
+.login-container input {
+    width: 300px;
+    padding: 10px;
+    border: 2px solid #744196;
+    border-radius: 5px;
+}
+
+.login-container button {
+    background-color: #744196;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-container button:hover {
+    background-color: #5b306d;
+}
+
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    padding: 20px;
+}
+
+.register-container h2 {
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.register-container .form-group {
+    margin-bottom: 15px;
+}
+
+.register-container label {
+    display: block;
+    margin-bottom: 5px;
+    color: #e4e4e4;
+}
+
+.register-container input {
+    width: 300px;
+    padding: 10px;
+    border: 2px solid #744196;
+    border-radius: 5px;
+}
+
+.register-container button {
+    background-color: #744196;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.register-container button:hover {
+    background-color: #5b306d;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 15px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    padding: 20px;
+}
+
+.container h2 {
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.container .form-group {
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.container label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+.container input,
+.container select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #744196;
+    border-radius: 5px;
+}
+
+.container button {
+    background-color: #744196;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.container button:hover {
+    background-color: #5b306d;
+}
+
+/* Fullscreen toggle button styling */
+.fullscreen-toggle {
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: rgb(184, 184, 184);
+    font-size: 1em;
+    padding: 10px;
+}
+
+.fullscreen-toggle .toggle-switch {
+    width: 50px;
+    height: 25px;
+    display: block;
+    background-color: #ccc;
+    border-radius: 25px;
+    position: relative;
+    box-shadow: 0 0 16px 3px rgba(0 0 0 / 15%);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-left: 10px;
+}
+
+.fullscreen-toggle .toggle-switch::after {
+    content: '';
+    width: 23px;
+    height: 23px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    transition: left 0.2s;
+}
+
+.fullscreen-toggle .toggle-switch.on {
+    background-color: #744196;
+}
+
+.fullscreen-toggle .toggle-switch.on::after {
+    left: 26px;
+}
+
+/* Fullscreen mode styles */
+.fullscreen .header-navbar-container,
+.fullscreen .viewer-container h1 {
+    display: none;
+}
+
+.fullscreen .viewer-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fullscreen .page-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fullscreen .page {
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.custom-button {
+    background-color: #744196;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#deleteForm {
+    padding-top: 20px;
+}
+
+.custom-button:hover {
+    background-color: #5b306d;
+}
+
+.comic-item .delete-button {
+    background-color: #744196;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-button {
+    margin-bottom: 10px;
+}
+
+.comic-item .delete-button:hover {
+    background-color: #5b306d;
+}
+
+.comic-item .role-select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.toggle-switch.disabled {
+    opacity: 0.5;
+    pointer-events: none;
 }

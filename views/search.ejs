@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MIMO - 検索結果</title>
-
     <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
@@ -18,23 +17,26 @@
         <%- include ("navbar.ejs") %>
     </div>
 
-    <div class="search-container">
-        <form action="/search" method="GET">
-            <input type="text" name="query" placeholder="タイトルやタグで検索" value="<%= query %>">
-            <button type="submit">検索</button>
-        </form>
-    </div>
-
     <div class="newcomics">
         <p>検索結果</p>
-        <div class="comics-container">
-            <% comics.forEach(comic => { %>
-                <div class="comic-item" onclick="location.href='/viewer/<%= comic.id %>'">
-                    <div class="comic-thumbnail" style="background-image: url('/uploads/<%= comic.thumbnail %>');"></div>
-                    <div class="comic-title"><%= comic.title.length > 12 ? comic.title.substring(0, 12) + '...' : comic.title %></div>
-                </div>
-            <% }); %>
+        <div class="search-container">
+            <form action="/search" method="GET">
+                <input type="text" name="query" placeholder="タイトルやタグで検索" value="<%= query %>">
+                <button type="submit" class="custom-button">検索</button>
+            </form>
         </div>
+        <% if (comics.length === 0) { %>
+            <div class="no-results-message">検索ワードに当てはまる漫画が見つかりませんでした。</div>
+        <% } else { %>
+            <div class="comics-container">
+                <% comics.forEach(comic => { %>
+                    <div class="comic-item" onclick="location.href='/viewer/<%= comic.id %>'">
+                        <div class="comic-thumbnail" style="background-image: url('/uploads/<%= comic.thumbnail %>');"></div>
+                        <div class="comic-title"><%= comic.title.length > 12 ? comic.title.substring(0, 12) + '...' : comic.title %></div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
     </div>
 
     <div class="overlay" id="overlay"></div>
