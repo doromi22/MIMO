@@ -3,3 +3,7 @@ MIMO is a website that students(users) can upload their own comics, and their co
 By search function, user can find other person's comics by title, author name.
 
 This site's backend is developed in Node.js.
+
+Currently available!
+
+URL is: http://mangamimo.com/
