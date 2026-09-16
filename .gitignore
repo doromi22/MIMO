@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# user uploads
+uploads/*
+!uploads/.gitkeep
+
+# env
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+
+# os
+.DS_Store
+Thumbs.db
+
+# OneDrive duplicate artifacts
+* 2.json
+*(1).json

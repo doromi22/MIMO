@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIMO</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+
+    <!-- Header and Navbar Container -->
+    <div class="header-navbar-container">
+        <!-- header -->
+        <%- include ("header.ejs") %>
+
+        <!-- navbar -->
+        <%- include ("navbar.ejs") %>
+    </div>
+
+    <div class="newcomics">
+        <p>アップロードした作品</p>
+        <div class="controls">
+            <form id="deleteForm" action="/delete-comic" method="POST">
+                <input type="hidden" name="comicIds" id="comicIds" value="">
+                <button type="button" id="selectAll" class="custom-button">すべて選択</button>
+                <button type="submit" id="deleteSelected" class="custom-button">選択した項目を削除</button>
+            </form>
+        </div>
+        <div class="comics-container">
+            <% comics.forEach(comic => { %>
+                <div class="comic-item">
+                    <input type="checkbox" class="comic-checkbox" value="<%= comic.id %>">
+                    <div class="comic-thumbnail"
+                        style="background-image: url('/uploads/<%= comic.thumbnail %>');"
+                        onclick="location.href='/viewer/<%= comic.id %>'"></div>
+                    <div class="comic-title">
+                        <%= comic.title.length> 12 ? comic.title.substring(0, 12) + '...' : comic.title %>
+                    </div>
+                    <button type="button" class="delete-button" data-id="<%= comic.id %>">削除</button>
+                    <select class="role-select" data-id="<%= comic.id %>">
+                        <option value="1" <%= comic.role === 1 ? 'selected' : '' %>>全員に公開</option>
+                        <option value="2" <%= comic.role === 2 ? 'selected' : '' %>>学生限定公開</option>
+                        <option value="3" <%= comic.role === 3 ? 'selected' : '' %>>先生限定公開</option>
+                        <option value="4" <%= comic.role === 4 ? 'selected' : '' %>>非公開</option>
+                    </select>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <script src="/scripts/scripts.js"></script>
+</body>
+</html>
